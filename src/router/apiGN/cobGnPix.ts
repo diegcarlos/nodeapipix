@@ -15,16 +15,16 @@ const gerarTxid = idunico.replace(/-/g, '')
 
 routerCobPix.post('/hash/gn', async (req, res) => {
   const accessToken = req.headers.authorization
-
+  const { amount, description } = req.body
   const dataCob = {
     calendario: {
       expiracao: 3600
     },
     valor: {
-      original: '00.01'
+      original: amount
     },
     chave: keyPixRecebedor,
-    solicitacaoPagador: 'teste'
+    solicitacaoPagador: description
   }
   try {
     const reqGn = Axios.create({
