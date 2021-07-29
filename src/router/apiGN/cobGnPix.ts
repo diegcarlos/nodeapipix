@@ -1,6 +1,5 @@
 import Axios from 'axios'
 import * as Express from 'express'
-import { v4 as uuid } from 'uuid'
 import * as Fs from 'fs'
 import * as Path from 'path'
 import * as https from 'https'
@@ -10,18 +9,17 @@ const cert = Fs.readFileSync(Path.resolve(__dirname, `../../../certs/${process.e
 const agent = new https.Agent({ pfx: cert, passphrase: '' })
 const keyPixRecebedor = '0e77310e-4c62-4ad3-9bd7-3c9c72344c93'
 
-const idunico = uuid()
-const gerarTxid = idunico.replace(/-/g, '')
-
 routerCobPix.post('/hash/gn', async (req, res) => {
   const accessToken = req.headers.authorization
-  const { amount, description } = req.body
+  let { amount, description } = req.body
+  amount = amount / 100
+  console.log(amount)
   const dataCob = {
     calendario: {
       expiracao: 3600
     },
     valor: {
-      original: amount
+      original: amount.toFixed(2)
     },
     chave: keyPixRecebedor,
     solicitacaoPagador: description
@@ -36,10 +34,11 @@ routerCobPix.post('/hash/gn', async (req, res) => {
       }
     })
 
-    const cobRes = await reqGn.put(`v2/cob/${gerarTxid}`, dataCob)
+    const cobRes = await reqGn.post('v2/cob/', dataCob)
     return res.status(200).send(cobRes.data)
   } catch (error) {
-    return res.status(400).send({ success: false, status: 'error' })
+    console.log(error.response.status)
+    return res.status(error.response.status).send(error.response.data)
   }
 })
 
