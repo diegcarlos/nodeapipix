@@ -1,7 +1,8 @@
 import * as Express from 'express'
 import toKenGn from './router/apiGN/tokenGN'
 import routerCobPix from './router/apiGN/cobGnPix'
-// import touterGeQrGn from './router/apiGN/cobGeQrPix'
+import routerGeQrGn from './router/apiGN/cobGeQrPix'
+import routerConCobGn from './router/apiGN/conCobGn'
 
 const app = Express()
 
@@ -9,7 +10,8 @@ app.use(Express.json())
 
 app.use(toKenGn)
 app.use(routerCobPix)
-// app.use(touterGeQrGn)
+app.use(routerGeQrGn)
+app.use(routerConCobGn)
 
 app.listen(3333, () => {
   console.log('running')

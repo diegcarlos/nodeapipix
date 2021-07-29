@@ -2,11 +2,11 @@ import Axios from 'axios'
 import { Router } from 'express'
 import { dataVari } from './dataVariavesGN'
 
-const QrRouter = Router()
+const ConCob = Router()
 
-QrRouter.get('/qrcode/gn/:id', async (req, res) => {
+ConCob.get('/con/gn/:txid', async (req, res) => {
   const accessToken = req.headers.authorization
-  const { id } = req.params
+  const { txid } = req.params
 
   const dataType = {
   }
@@ -19,11 +19,11 @@ QrRouter.get('/qrcode/gn/:id', async (req, res) => {
     }
   })
   try {
-    const cobRes = await reqGn.get(`/v2/loc/${id}/qrcode`, dataType)
+    const cobRes = await reqGn.get(`/v2/cob/${txid}`, dataType)
     return res.status(200).send(cobRes.data)
   } catch (error) {
     return res.status(error.response.status).send(error.response.data)
   }
 })
 
-export default QrRouter
+export default ConCob
