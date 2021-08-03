@@ -1,10 +1,11 @@
 import admin from 'firebase-admin'
-import Keys from './serviceAccountKey.json'
+
+const Keys = require('./serviceAccountKey.json')
 
 admin.initializeApp({
-  credential: admin.credential.cert(Keys)
+  credential: admin.credential.cert(Keys),
 })
 
-const dbFirebase = admin.database()
+const dbFirebase = admin.firestore()
 
 export default dbFirebase

@@ -1,19 +1,44 @@
-import { Router } from 'express'
+import Express from 'express'
+import Multer from 'multer'
+
 import dbFirebase from '../../data/firebase'
 
-const routerCadCli = Router()
+const routerCadCli = Express.Router()
 
 const db = dbFirebase
 
-routerCadCli.post('cad/cli/gn', async (req, res) => {
-  const { CnpjCpf, clientSecret, clientSecretId, cert } = req.body
+const upload = Multer({ dest: '../../../certs' })
+
+routerCadCli.post('/cad/cli/gn', upload.single('Certificado'), async (req, res) => {
+  const { CnpjCpf, clientSecret, clientSecretId } = req.body
+  console.log(req.file)
+  // Multer({
+  //   storage: Multer.diskStorage({
+  //     destination: 'uploads/',
+  //     filename (req, file, callback) {
+  //       const fileName = `${CnpjCpf}-${file.originalname}`
+
+  //       return callback(null, fileName)
+  //     }
+  //   })
+  // })
 
   const newclient = {
-    certificado: cert,
+    certificado: req.file?.filename,
     clientId: clientSecretId,
     clientSecret: clientSecret,
     cnpj_cpf: CnpjCpf
   }
-  const respDb = await db.ref('authenticated').push(newclient)
-  return respDb
+
+  try {
+    const docRef = db.collection('users').doc('kYN3EPBL7UG7z6zqPwdG')
+
+    const respDb = await docRef.set(newclient)
+
+    return res.status(200).send(console.log(respDb))
+  } catch (error) {
+    return res.status(400).send(console.log(error))
+  }
 })
+
+export default routerCadCli
