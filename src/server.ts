@@ -5,6 +5,7 @@ import routerCobPix from './router/apiGN/cobGn'
 import routerGeQrGn from './router/apiGN/cobGeQrPix'
 import routerConCobGn from './router/apiGN/conCobGn'
 import routerCadCliGn from './router/apiGN/cadCliGn'
+import { routerGetCli } from './router/apiGN/dataVariavesGN'
 
 const app = Express()
 
@@ -12,6 +13,7 @@ app.use(ExpressUpload())
 app.use(Express.json())
 
 /** Api Gerencia Net */
+app.use(routerGetCli)
 app.use(routerCadCliGn)
 app.use(toKenGn)
 app.use(routerCobPix)
